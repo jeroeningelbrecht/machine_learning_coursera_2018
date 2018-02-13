@@ -69,15 +69,15 @@ J=sum(J);
 %---------------------------%
 
 %get rid of bias units
-Theta1 = Theta1(:,[2:size(Theta1,2)]);
+Theta1_no_bias = Theta1(:,[2:size(Theta1,2)]);
 %get rid of bias units
-Theta2 = Theta2(:,[2:size(Theta2,2)]);
+Theta2_no_bias = Theta2(:,[2:size(Theta2,2)]);
 
-size(Theta1); %25x400
-size(Theta2); %10x25
+size(Theta1_no_bias); %25x400
+size(Theta2_no_bias); %10x25
 
 % goe bezig
-J = J + lambda/(2*m) * (sum(sum(Theta1.^2,2))+sum(sum(Theta2.^2,2)));
+J = J + lambda/(2*m) * (sum(sum(Theta1_no_bias.^2,2))+sum(sum(Theta2_no_bias.^2,2)));
 
 % Part 2: Implement the backpropagation algorithm to compute the gradients
 %         Theta1_grad and Theta2_grad. You should return the partial derivatives of
@@ -94,6 +94,29 @@ J = J + lambda/(2*m) * (sum(sum(Theta1.^2,2))+sum(sum(Theta2.^2,2)));
 %               over the training examples if you are implementing it for the 
 %               first time.
 %
+
+% m = the number of training examples
+% n = the number of training features, including the initial bias unit.
+n=size(X,2);
+
+%h = the number of units in the hidden layer - NOT including the bias unit
+h=size(Theta1(2:end,:),1);
+
+%r = the number of output classifications 
+r=num_labels;
+  
+  %backward propagation
+  d3 = a3-y_matrix; %size(d3) is mxr; 5000x10; OK
+  
+  d2 = (d3*Theta2(:,2:end));
+  d2 = d2 .* sigmoidGradient(z2); %size(d2)=5000x25=mxh OK
+  
+ D1 = d2'*a1; % size 401x25;  hxn? 
+ D2 = d3'*a2; % size 26x10; rx(h+1)?
+ 
+ Theta1_grad = 1/m .* D1;
+ Theta2_grad = 1/m .* D2;
+
 % Part 3: Implement regularization with the cost function and gradients.
 %
 %         Hint: You can implement this around the code for
@@ -102,7 +125,11 @@ J = J + lambda/(2*m) * (sum(sum(Theta1.^2,2))+sum(sum(Theta2.^2,2)));
 %               and Theta2_grad from Part 2.
 %
 
+Theta1(:,1)=0;
+Theta2(:,1)=0;
 
+Theta1_grad = Theta1_grad + lambda/m * Theta1;
+Theta2_grad = Theta2_grad + lambda/m * Theta2;
 
 
 
