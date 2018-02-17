@@ -54,18 +54,17 @@ error_val   = zeros(m, 1);
 % ---------------------- Sample Solution ----------------------
 
 for i=1:m
-  Xsub =  X(1:i,i);
+  
+  Xsub =  X(1:i,:);
   ysub = y(1:i);
   
   theta = trainLinearReg(Xsub,ysub,lambda);
   Jtrain = linearRegCostFunction(Xsub,ysub,theta,0);
-  size(Xval); %size (21x2)
-  size(yval); %size (21x1)
-  size(theta); %size 1x1
-  
-  size(Xval*theta - yval)
-
   Jcv = linearRegCostFunction( Xval,yval,theta,0);
+  
+  error_train(i) = Jtrain;
+  error_val(i) = Jcv;
+  
 endfor
 
 
