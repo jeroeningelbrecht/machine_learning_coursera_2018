@@ -18,5 +18,4 @@ options = optimset('MaxIter', 200, 'GradObj', 'on');
 % Minimize using fmincg
 theta = fmincg(costFunction, initial_theta, options);
 
-
 end
